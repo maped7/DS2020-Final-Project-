@@ -1,7 +1,7 @@
 Can Economic Growth Happen Without Increasing Emissions?
 ================
 Maurycy Pedroza
-2025-12-09
+2025-12-16
 
 ## Introduction
 
