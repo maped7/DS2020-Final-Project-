@@ -28,8 +28,8 @@ means we need to break this link. This concept is called **decoupling**.
 4.  Is this achievable for all countries?
 
 Understanding decoupling is critical for climate policy. If it’s
-impossible, we face a terrible trade-off: climate OR prosperity. If it’s
-achievable, we can have both.
+impossible, we face a terrible trade-off: climate OR economic
+development. If it’s achievable, we can have both.
 
 ## Data
 
@@ -364,12 +364,35 @@ ggplot(country_comparison, aes(x = gdp_pct_change, y = co2_pct_change)) +
   geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.3) +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed", alpha = 0.3) +
   geom_point(aes(color = status, size = gdp_end), alpha = 0.6) +
+  # Label absolute decouplers
   geom_text_repel(
     data = country_comparison %>% 
       filter(status == "Absolute Decoupling", gdp_end > 5e11),
     aes(label = country),
     size = 3.5,
-    max.overlaps = 15
+    max.overlaps = 20
+  ) +
+  # Label relative decouplers above horizontal line
+  geom_text_repel(
+    data = country_comparison %>% 
+      filter(status == "Relative Decoupling", 
+             co2_pct_change > 50,
+             gdp_end > 3e11),
+    aes(label = country),
+    size = 3,
+    max.overlaps = 20,
+    color = "gray30"
+  ) +
+  # Label "No Decoupling" countries with high emissions growth
+  geom_text_repel(
+    data = country_comparison %>% 
+      filter(status == "No Decoupling", 
+             co2_pct_change > 100,
+             gdp_end > 2e11),
+    aes(label = country),
+    size = 3,
+    max.overlaps = 20,
+    color = "gray30"
   ) +
   scale_color_manual(values = c("Absolute Decoupling" = "#6A994E",
                                   "Relative Decoupling" = "#F18F01",
@@ -623,8 +646,9 @@ years. For climate goals, we would need:
 - Faster decoupling in developed countries
 - Help developing countries build renewable energy infrastructure
 
-**The Bottom Line**: We can have prosperity AND climate stability, but
-current progress is too slow and too uneven.
+**The Bottom Line**: We can have economic development AND climate
+stability, but current progress is too slow and unequal across the
+different regions that need it most.
 
 ### Limitations of This Analysis
 
@@ -652,7 +676,7 @@ The evidence shows that absolute decoupling is achievable, as we have
 proof from multiple countries over the past couple decades. The urgent
 question is no longer “is it possible?” but “how do we make it happen
 everywhere, fast enough to meet our climate goals?” We know it can be
-done. Now we need the political will to do it at scale.
+done.
 
 ## Reproducibility
 
