@@ -42,31 +42,31 @@ Understanding decoupling is critical for climate policy. If it's impossible, we 
 
 **Dataset**: Our World in Data CO2 and Greenhouse Gas Emissions Database  
 **Link**: https://github.com/owid/co2-data  
-**What it includes**: Economic and emissions data for 200+ countries from 1990-2023
+**What it includes**: Economic and emissions data for 200+ countries from 1750-2023
 
 This dataset pulls and combines information from Global Carbon Project (emissions data), World Bank (economic data), and the BP Statistical Review (energy data)
 
 ```{r load-libraries}
-# Load packages we need
+# Load packages needed
 library(tidyverse)
 library(scales)
 library(knitr)
 library(patchwork)
 library(ggrepel)
 
-# Set a clean visual theme
+# Set theme
 theme_set(theme_minimal(base_size = 12) +
   theme(
     plot.title = element_text(face = "bold", size = 14),
     plot.subtitle = element_text(color = "gray40")
   ))
 
-# Consistent color scheme throughout
+# Set color scheme
 colors_main <- c("#2E86AB", "#A23B72", "#F18F01", "#C73E1D", "#6A994E")
 ```
 
 ```{r load-data}
-# Download the data with error handling
+# Download the data
 tryCatch({
   co2_data <- read_csv("https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv",
                        show_col_types = FALSE)
@@ -157,7 +157,7 @@ global_data <- df_clean %>%
     co2_index = 100 * total_co2 / first(total_co2)
   )
 
-# Create the visualization
+# Create visualization
 ggplot(global_data, aes(x = year)) +
   geom_line(aes(y = gdp_index, color = "Global GDP"), linewidth = 1.5) +
   geom_line(aes(y = co2_index, color = "Global CO2"), linewidth = 1.5) +
@@ -285,7 +285,7 @@ kable(status_summary,
 **Key Finding**: Of the `r nrow(country_comparison)` countries measured, only `r sum(country_comparison$status == "Absolute Decoupling")` (`r round(100*sum(country_comparison$status == "Absolute Decoupling")/nrow(country_comparison), 1)`%) of them have achieved absolute decoupling. 
 
 ```{r decoupling-scatter, fig.height=8}
-# Visualize the relationship
+# Visualize relationship
 ggplot(country_comparison, aes(x = gdp_pct_change, y = co2_pct_change)) +
   geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.3) +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed", alpha = 0.3) +
@@ -336,7 +336,7 @@ ggplot(country_comparison, aes(x = gdp_pct_change, y = co2_pct_change)) +
 ```
 
 ```{r top-performers}
-# Show top 10 absolute decouplers
+# Display top 10 absolute decouplers
 top_decouplers <- country_comparison %>%
   filter(status == "Absolute Decoupling") %>%
   arrange(co2_pct_change) %>%
@@ -389,7 +389,7 @@ ggplot(efficiency_data, aes(x = year, y = avg_intensity, color = income_group)) 
 Let's look into five countries that successfully achieved absolute decoupling: UK, Germany, France, Denmark, and Sweden.
 
 ```{r case-study-setup}
-# Select our case study countries
+# Select case study countries
 case_countries <- c("United Kingdom", "Germany", "France", "Denmark", "Sweden")
 
 case_data <- df_clean %>%
@@ -425,7 +425,7 @@ p1 / p2 +
 ```
 
 ```{r case-study-table}
-# Quantify the changes
+# Quantify changes
 case_summary <- case_data %>%
   filter(year %in% c(1990, max(year))) %>%
   group_by(country) %>%
